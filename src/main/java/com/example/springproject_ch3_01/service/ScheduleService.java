@@ -5,7 +5,9 @@ import com.example.springproject_ch3_01.dto.request.ScheduleUpdateRequest;
 import com.example.springproject_ch3_01.dto.response.ScheduleCreateResponse;
 import com.example.springproject_ch3_01.dto.response.ScheduleResponse;
 import com.example.springproject_ch3_01.entity.Schedule;
+import com.example.springproject_ch3_01.entity.User;
 import com.example.springproject_ch3_01.repository.ScheduleRepository;
+import com.example.springproject_ch3_01.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,15 +19,19 @@ import java.util.List;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
 
     /**
      * 일정 생성
      */
     @Transactional
     public ScheduleCreateResponse createSchedule(ScheduleCreateRequest request) {
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+
         // Request Dto -> Entity
         Schedule schedule = new Schedule(
-                request.getAuthor(),
+                user,
                 request.getTitle(),
                 request.getContent()
         );

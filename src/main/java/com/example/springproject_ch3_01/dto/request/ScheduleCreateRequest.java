@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ScheduleCreateRequest {
 
-    private String author;
+    private Long userId;
     private String title;
     private String content;
 }

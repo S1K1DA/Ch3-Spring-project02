@@ -16,8 +16,9 @@ public class Schedule extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String author;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(nullable = false)
     private String title;
@@ -25,8 +26,8 @@ public class Schedule extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
-    public Schedule(String author, String title, String content) {
-        this.author = author;
+    public Schedule(User user, String title, String content) {
+        this.user = user;
         this.title = title;
         this.content = content;
     }

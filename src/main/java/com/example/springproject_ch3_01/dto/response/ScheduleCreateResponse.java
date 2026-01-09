@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 public class ScheduleCreateResponse {
 
     private Long id;
-    private String author;
+    private Long userId;
+    private String userName;
     private String title;
     private String content;
     private LocalDateTime createdAt;
@@ -20,7 +21,8 @@ public class ScheduleCreateResponse {
     public static ScheduleCreateResponse from(Schedule schedule) {
         return ScheduleCreateResponse.builder()
                 .id(schedule.getId())
-                .author(schedule.getAuthor())
+                .userId(schedule.getUser().getId())
+                .userName(schedule.getUser().getUserName())
                 .title(schedule.getTitle())
                 .content(schedule.getContent())
                 .createdAt(schedule.getCreatedAt())
@@ -28,3 +30,4 @@ public class ScheduleCreateResponse {
                 .build();
     }
 }
+
