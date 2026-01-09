@@ -3,6 +3,7 @@ package com.example.springproject_ch3_01.service;
 import com.example.springproject_ch3_01.dto.request.ScheduleCreateRequest;
 import com.example.springproject_ch3_01.dto.request.ScheduleUpdateRequest;
 import com.example.springproject_ch3_01.dto.response.ScheduleCreateResponse;
+import com.example.springproject_ch3_01.dto.response.ScheduleResponse;
 import com.example.springproject_ch3_01.entity.Schedule;
 import com.example.springproject_ch3_01.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,10 +41,10 @@ public class ScheduleService {
      * 일정 전체 조회
      */
     @Transactional(readOnly = true)
-    public List<ScheduleCreateResponse> getSchedules() {
+    public List<ScheduleResponse> getSchedules() {
         return scheduleRepository.findAll()
                 .stream()
-                .map(ScheduleCreateResponse::from)
+                .map(ScheduleResponse::from)
                 .toList();
     }
 
@@ -51,10 +52,10 @@ public class ScheduleService {
      * 일정 단건 조회
      */
     @Transactional(readOnly = true)
-    public ScheduleCreateResponse getSchedule(Long id) {
+    public ScheduleResponse getSchedule(Long id) {
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 일정이 존재하지 않습니다."));
-        return ScheduleCreateResponse.from(schedule);
+        return ScheduleResponse.from(schedule);
     }
 
     /**
@@ -71,14 +72,14 @@ public class ScheduleService {
      * 일정 수정
      */
     @Transactional
-    public ScheduleCreateResponse updateSchedule(Long id, ScheduleUpdateRequest request) {
+    public ScheduleResponse updateSchedule(Long id, ScheduleUpdateRequest request) {
 
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 일정이 존재하지 않습니다."));
 
         schedule.update(request.getTitle(), request.getContent());
 
-        return ScheduleCreateResponse.from(schedule);
+        return ScheduleResponse.from(schedule);
     }
 
 
