@@ -26,7 +26,8 @@ public class UserService {
         // Request Dto -> Entity
         User user = new User(
                 request.getUserName(),
-                request.getEmail()
+                request.getEmail(),
+                request.getPassword()
         );
         // DB 저장
         User savedUser = userRepository.save(user);

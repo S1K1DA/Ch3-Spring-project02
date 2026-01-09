@@ -5,6 +5,7 @@ import com.example.springproject_ch3_01.dto.request.UserUpdateRequest;
 import com.example.springproject_ch3_01.dto.response.UserCreateResponse;
 import com.example.springproject_ch3_01.dto.response.UserResponse;
 import com.example.springproject_ch3_01.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class UserController {
      * 유저 생성
      */
     @PostMapping("/users")
-    public ResponseEntity<UserCreateResponse> createUser(@RequestBody UserCreateRequest request) {
+    public ResponseEntity<UserCreateResponse> createUser(@Valid @RequestBody UserCreateRequest request) {
         UserCreateResponse response = userService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -60,6 +61,4 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
-
-
 }
