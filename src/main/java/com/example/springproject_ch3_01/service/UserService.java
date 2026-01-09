@@ -1,11 +1,13 @@
 package com.example.springproject_ch3_01.service;
 
+import com.example.springproject_ch3_01.dto.request.LoginRequest;
 import com.example.springproject_ch3_01.dto.request.UserCreateRequest;
 import com.example.springproject_ch3_01.dto.request.UserUpdateRequest;
 import com.example.springproject_ch3_01.dto.response.UserCreateResponse;
 import com.example.springproject_ch3_01.dto.response.UserResponse;
 import com.example.springproject_ch3_01.entity.User;
 import com.example.springproject_ch3_01.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,25 @@ public class UserService {
 
         // Entity -> Response DTO 변환
         return UserCreateResponse.from(savedUser);
+    }
+
+    /**
+     * 유저 로그인
+     */
+    @Transactional(readOnly = true)
+    public void login(LoginRequest request, HttpSession session) {
+
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() ->
+                        new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다.")
+                );
+
+        if (!user.getPassword().equals(request.getPassword())) {
+            throw new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다.");
+        }
+
+        // 세션에 로그인 정보 저장
+        session.setAttribute("LOGIN_USER_ID", user.getId());
     }
 
     /**

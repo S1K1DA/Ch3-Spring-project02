@@ -1,10 +1,12 @@
 package com.example.springproject_ch3_01.controller;
 
+import com.example.springproject_ch3_01.dto.request.LoginRequest;
 import com.example.springproject_ch3_01.dto.request.UserCreateRequest;
 import com.example.springproject_ch3_01.dto.request.UserUpdateRequest;
 import com.example.springproject_ch3_01.dto.response.UserCreateResponse;
 import com.example.springproject_ch3_01.dto.response.UserResponse;
 import com.example.springproject_ch3_01.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,12 +23,21 @@ public class UserController {
     private final UserService userService;
 
     /**
-     * 유저 생성
+     * 유저 생성 / 회원가입
      */
     @PostMapping("/users")
     public ResponseEntity<UserCreateResponse> createUser(@Valid @RequestBody UserCreateRequest request) {
         UserCreateResponse response = userService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    /**
+     * 유저 로그인
+     */
+    @PostMapping("users/login")
+    public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest request, HttpSession session) {
+        userService.login(request, session);
+        return ResponseEntity.ok().build();
     }
 
     /**
