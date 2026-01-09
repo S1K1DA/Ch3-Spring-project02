@@ -1,6 +1,7 @@
 package com.example.springproject_ch3_01.controller;
 
 import com.example.springproject_ch3_01.dto.request.UserCreateRequest;
+import com.example.springproject_ch3_01.dto.request.UserUpdateRequest;
 import com.example.springproject_ch3_01.dto.response.UserCreateResponse;
 import com.example.springproject_ch3_01.dto.response.UserResponse;
 import com.example.springproject_ch3_01.service.UserService;
@@ -42,4 +43,23 @@ public class UserController {
     public ResponseEntity<UserResponse> getUser(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUser(id));
     }
+
+    /**
+     * 유저 정보 수정
+     */
+    @PatchMapping("/users/{id}")
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
+        return ResponseEntity.ok(userService.updateUser(id, request));
+    }
+
+    /**
+     * 유저 삭제
+     */
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package com.example.springproject_ch3_01.service;
 
 import com.example.springproject_ch3_01.dto.request.UserCreateRequest;
+import com.example.springproject_ch3_01.dto.request.UserUpdateRequest;
 import com.example.springproject_ch3_01.dto.response.UserCreateResponse;
 import com.example.springproject_ch3_01.dto.response.UserResponse;
 import com.example.springproject_ch3_01.entity.User;
@@ -54,4 +55,29 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
         return UserResponse.from(user);
     }
+
+    /**
+     * 유저 정보 수정
+     */
+    @Transactional
+    public UserResponse updateUser(Long id, UserUpdateRequest request) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
+        user.update(request.getEmail());
+
+        return UserResponse.from(user);
+    }
+
+    /**
+     * 유저 삭제
+     */
+    @Transactional
+    public void deleteUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+        userRepository.delete(user);
+    }
+
 }
