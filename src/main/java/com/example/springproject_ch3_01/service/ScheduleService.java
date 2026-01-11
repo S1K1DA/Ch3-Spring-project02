@@ -6,9 +6,11 @@ import com.example.springproject_ch3_01.dto.response.ScheduleCreateResponse;
 import com.example.springproject_ch3_01.dto.response.ScheduleResponse;
 import com.example.springproject_ch3_01.entity.Schedule;
 import com.example.springproject_ch3_01.entity.User;
+import com.example.springproject_ch3_01.exception.CustomException;
 import com.example.springproject_ch3_01.repository.ScheduleRepository;
 import com.example.springproject_ch3_01.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +29,10 @@ public class ScheduleService {
     @Transactional
     public ScheduleCreateResponse createSchedule(ScheduleCreateRequest request) {
         User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(
+                        HttpStatus.NOT_FOUND,
+                        "해당 유저가 존재하지 않습니다."
+                ));
 
         // Request Dto -> Entity
         Schedule schedule = new Schedule(
@@ -60,7 +65,10 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public ScheduleResponse getSchedule(Long id) {
         Schedule schedule = scheduleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 일정이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(
+                        HttpStatus.NOT_FOUND,
+                        "해당 일정이 존재하지 않습니다."
+                ));
         return ScheduleResponse.from(schedule);
     }
 
@@ -70,7 +78,10 @@ public class ScheduleService {
     @Transactional
     public void deleteSchedule(Long id) {
         Schedule schedule = scheduleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 일정이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(
+                        HttpStatus.NOT_FOUND,
+                        "해당 일정이 존재하지 않습니다."
+                ));
         scheduleRepository.delete(schedule);
     }
 
@@ -81,8 +92,10 @@ public class ScheduleService {
     public ScheduleResponse updateSchedule(Long id, ScheduleUpdateRequest request) {
 
         Schedule schedule = scheduleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 일정이 존재하지 않습니다."));
-
+                .orElseThrow(() -> new CustomException(
+                        HttpStatus.NOT_FOUND,
+                        "해당 일정이 존재하지 않습니다."
+                ));
         schedule.update(request.getTitle(), request.getContent());
 
         return ScheduleResponse.from(schedule);
