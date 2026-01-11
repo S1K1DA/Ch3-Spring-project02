@@ -1,5 +1,6 @@
 package com.example.springproject_ch3_01.service;
 
+import com.example.springproject_ch3_01.config.PasswordEncoder;
 import com.example.springproject_ch3_01.dto.request.LoginRequest;
 import com.example.springproject_ch3_01.dto.request.UserCreateRequest;
 import com.example.springproject_ch3_01.dto.request.UserUpdateRequest;
@@ -21,17 +22,21 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * 유저 생성
      */
     @Transactional
     public UserCreateResponse createUser(UserCreateRequest request) {
+
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+
         // Request Dto -> Entity
         User user = new User(
                 request.getUserName(),
                 request.getEmail(),
-                request.getPassword()
+                encodedPassword
         );
         // DB 저장
         User savedUser = userRepository.save(user);
@@ -52,7 +57,7 @@ public class UserService {
                         "이메일 또는 비밀번호가 올바르지 않습니다."
                 ));
 
-        if (!user.getPassword().equals(request.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new CustomException(
                     HttpStatus.UNAUTHORIZED,
                     "이메일 또는 비밀번호가 올바르지 않습니다."
