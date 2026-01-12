@@ -3,14 +3,17 @@ package com.example.springproject_ch3_01.controller;
 import com.example.springproject_ch3_01.dto.request.ScheduleCreateRequest;
 import com.example.springproject_ch3_01.dto.request.ScheduleUpdateRequest;
 import com.example.springproject_ch3_01.dto.response.ScheduleCreateResponse;
+import com.example.springproject_ch3_01.dto.response.SchedulePageResponse;
 import com.example.springproject_ch3_01.dto.response.ScheduleResponse;
 import com.example.springproject_ch3_01.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -32,9 +35,14 @@ public class ScheduleController {
      * 일정 전체 조회
      */
     @GetMapping("/schedules")
-    public ResponseEntity<List<ScheduleResponse>> getSchedules() {
-        List<ScheduleResponse> responses = scheduleService.getSchedules();
-        return ResponseEntity.ok(responses);
+    public ResponseEntity<Page<SchedulePageResponse>> getSchedules(
+            @PageableDefault(
+                    size = 10,
+                    sort = "updatedAt",
+                    direction = Sort.Direction.DESC
+            ) Pageable pageable
+    ) {
+        return ResponseEntity.ok(scheduleService.getSchedules(pageable));
     }
 
     /**

@@ -3,6 +3,7 @@ package com.example.springproject_ch3_01.service;
 import com.example.springproject_ch3_01.dto.request.ScheduleCreateRequest;
 import com.example.springproject_ch3_01.dto.request.ScheduleUpdateRequest;
 import com.example.springproject_ch3_01.dto.response.ScheduleCreateResponse;
+import com.example.springproject_ch3_01.dto.response.SchedulePageResponse;
 import com.example.springproject_ch3_01.dto.response.ScheduleResponse;
 import com.example.springproject_ch3_01.entity.Schedule;
 import com.example.springproject_ch3_01.entity.User;
@@ -10,11 +11,12 @@ import com.example.springproject_ch3_01.exception.CustomException;
 import com.example.springproject_ch3_01.repository.ScheduleRepository;
 import com.example.springproject_ch3_01.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -52,11 +54,9 @@ public class ScheduleService {
      * 일정 전체 조회
      */
     @Transactional(readOnly = true)
-    public List<ScheduleResponse> getSchedules() {
-        return scheduleRepository.findAll()
-                .stream()
-                .map(ScheduleResponse::from)
-                .toList();
+    public Page<SchedulePageResponse> getSchedules(Pageable pageable) {
+        return scheduleRepository.findAll(pageable)
+                .map(SchedulePageResponse::from);
     }
 
     /**
